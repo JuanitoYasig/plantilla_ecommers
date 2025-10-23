@@ -25,6 +25,12 @@ if ($categoriaSeleccionada) {
 
 <section class="py-5">
     <div class="container">
+        <!-- Barra de búsqueda -->
+        <div class="row mb-4">
+            <div class="col-lg-9 offset-lg-3">
+                <input type="text" id="searchInput" class="form-control form-control-lg" placeholder="Buscar productos...">
+            </div>
+        </div>
         <div class="row">
             <!-- Sidebar de Categorías -->
             <div class="col-lg-3 mb-4">
@@ -56,9 +62,9 @@ if ($categoriaSeleccionada) {
                         No hay productos disponibles en esta categoría.
                     </div>
                 <?php else: ?>
-                    <div class="row g-4">
+                    <div class="row g-4" id="productsGrid">
                         <?php foreach ($productos as $producto): ?>
-                            <div class="col-md-6 col-lg-4 product-card-wrapper">
+                            <div class="col-md-6 col-lg-4 product-card-wrapper" data-product-name="<?php echo strtolower(htmlspecialchars($producto['nombre'])); ?>">
                                 <div class="card product-card h-100 glass-card">
                                     <div class="position-relative">
                                         <?php
@@ -118,5 +124,20 @@ if ($categoriaSeleccionada) {
         </div>
     </div>
 </section>
+
+<script>
+// Filtro de productos por nombre
+document.getElementById('searchInput').addEventListener('input', function() {
+    const term = this.value.trim().toLowerCase();
+    document.querySelectorAll('#productsGrid .product-card-wrapper').forEach(function(card) {
+        const name = card.getAttribute('data-product-name');
+        if (!term || name.includes(term)) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+});
+</script>
 
 <?php include 'footer.php'; ?>
